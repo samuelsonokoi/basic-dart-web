@@ -16,6 +16,16 @@ void main() {
 
   funcTest();
 
+  listTest();
+
+  mapTest();
+
+  manipulateHtml();
+
+  classTest();
+
+  inheritanceTest();
+
 }
 
 void getSum(MouseEvent e){
@@ -150,8 +160,6 @@ void getSum(MouseEvent e){
 }
 
 void increment(MouseEvent e){
-  
-
   int inc = int.parse(querySelector('#age').text);
 
   inc++;
@@ -179,8 +187,138 @@ void funcTest(){
   output += "24 * 24 = ${multiplication(50, times2)}\n\n";
   output += "24 * 24 = ${multiplication(50, times3)}\n\n";
 
+  // Facotorial
+  output += "Factorial of 10 is: ${factorial(10)}";
+
 
   querySelector("#fOutput").text = output;
+}
+
+// Looking at maps
+void mapTest(){
+  String output = "";
+
+  Map empty = {};
+
+  Map user = {
+    "firstName": "Samuelson", 
+    "lastName": "Okoi", 
+    "gender": "male",
+    "email": "hello@samuelsonokoi.com",
+    "website": "samuelsonokoi.com",
+    "mobileNumbers": {
+      "mobile1": "+2348184193891",
+      "mobile2": "+2348161142911"
+    } 
+  };
+
+  output += "$user";
+
+  output += "User's First name is: ${user["firstName"]}, Phone number is: ${user["mobileNumbers"]["mobile1"]}";
+
+  user.addAll({"country": "Nigetia"});
+  
+  user.remove("gender");
+  
+  user.forEach((k, v) => output += "$k : $v, ");
+
+  querySelector('#mOutput').text = output;
+}
+
+// Manipulating HTML
+void manipulateHtml(){
+  String output = "";
+
+  Element title = querySelector("#hOutput");
+
+  title.setInnerHtml("This content has been modified.");
+
+  title.style.color = "blue";
+
+  title.classes.add("font-lg");
+
+  title.style.textAlign = "center";
+
+  output += title.innerHtml + '\n';
+
+  // Creating new elements
+  Element divBox = querySelector("#divBox");
+
+  DivElement sampleDiv = new DivElement();
+
+  sampleDiv.text = "I'm a new div element";
+
+  divBox.children.add(sampleDiv);
+
+  AnchorElement link = new AnchorElement();
+
+  link.text = "Click to visit Google";
+
+  // Changing attributes of elements
+  link.setAttribute("href", "https://google.com");
+
+  link.setAttribute("target", "_blank");
+
+  link.appendText(" right away");
+
+  output += "the link address is: ${link.getAttribute("href")}";
+
+  divBox.children.add(link);
+
+  divBox.children.add(new Element.br());
+
+  Element inputElement = new InputElement();
+
+  inputElement.attributes['id'] = "inputElement";
+
+  inputElement.attributes['placeholder'] = "Enter a text";
+
+  divBox.children.add(inputElement);
+
+  inputElementChanged(Event m) => querySelector("#hOutput").text = output + ' \nInput changed';
+
+  querySelector("#inputElement").onChange.listen(inputElementChanged);
+
+  querySelector("#hOutput").text = output;
+} 
+
+// More on List
+void listTest(){
+  String output = "";
+
+  // List without a specific datatype
+  List emptyList = [];
+  List randList = ["Samuelson", 30, 'm'];
+
+  output += "is emptyList empty?: ${emptyList.isEmpty}\n\n";
+
+  output += "items in randList: ";
+
+  for (var i = 0; i < randList.length; i++) {
+    output += "${randList[i]}, \n\n";
+  }
+
+  randList.add("Dart Lang");
+
+  // Looping with foreach loop with list
+  randList.forEach((item) => output += "${item}, \n\n");
+
+  randList.remove('m');
+
+  output += "Updated items in randList to remove 'm': ";
+
+  for(var item in randList){
+    output += "${item}, \n\n";
+  }
+
+  // Defining a list with specific datatypes
+  List<String> friends = ["Denis", "Mendie", "Silas", "Conel", "Reagan"];
+
+  output += "My friends are: ";
+  
+  friends.forEach((f) => output += "$f, ");
+
+  querySelector("#lOutput").text = output;
 }
 
 int multiply(int num1, int num2){
@@ -203,3 +341,117 @@ String addList(int start, [int quantity = 1]){
 int multiplication(int num, func){
   return func(num);
 }
+
+// Factorial function
+int factorial(int num){
+  if (num <= 1) {
+    return 1;
+  } else {
+    return num * factorial(num - 1);
+  }
+}
+
+class Animal {
+  String name = "No name";
+  String sound = "No sound";
+
+  // private variable declaration
+  int _weight = 0;
+
+  // getters in dart
+  int get weight => _weight;
+
+  // setters in dart
+  set weight(int w){
+    if (w <= 0) {
+      _weight = 0;
+    } else {
+      _weight = w;
+    }
+  } 
+
+  // Constructor methods
+  Animal(){ numberOfAnimals++; }
+
+  // parameterized constructors
+  Animal.three(String name, String sound, int weight){
+    this.name = name;
+    this.sound = sound;
+    this._weight = weight;
+    numberOfAnimals++;
+  }
+
+  String run(){
+    return "${this.name} runs";
+  }
+
+  // static variables
+  static int numberOfAnimals = 0;
+
+  // static methods
+  static String getNumberOfAnimals(){
+    return numberOfAnimals.toString();
+  }
+
+  String info(){
+    return "$name, $sound, $weight";
+  }
+}
+
+class Dog extends Animal {
+
+  String bite(){
+    return "${this.name} bit you";
+  }
+
+  Dog(){Animal.numberOfAnimals++;}
+
+  Dog.three(String name, String sound, int weight){
+    this.name = name;
+    this.sound = sound;
+    this._weight = weight;
+    Animal.numberOfAnimals++;
+  }
+
+  // Overriding a method from the super class
+  String info(){
+    // return "$name, $sound, $weight";
+    return super .info() + " bites";
+  }
+}
+
+void classTest(){
+  String output = "";
+
+  Animal bear = new Animal();
+  bear.name = "Coby";
+  bear.sound = "Grrrrrr";
+  bear.weight = 600;
+
+  output += "${bear.name} said ${bear.sound} and weighs ${bear.weight} pounds.";
+
+  output += "${bear.run()}";
+
+  
+
+  querySelector("#oOutput").text = output;
+}
+
+inheritanceTest(){
+  String output = "";
+
+  Animal tiger = new Animal.three("Kazar", "Rowwwl", 658);
+
+  output += "${tiger.name} said ${tiger.sound} and weighs ${tiger.weight} pounds.";
+
+  output += "Number of Animals: ${Animal.getNumberOfAnimals()}";
+
+  Dog rover = new Dog.three("Rover", "woooof", 75);
+
+  output += "${rover.name} said ${rover.sound} and weighs ${rover.weight} pounds.";
+
+  output += rover.info();
+
+  querySelector("#iOutput").text = output;
+}
+
