@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:math';
 
 void main() {
   querySelector('#output').text = 'My first Dart application';
@@ -452,6 +453,85 @@ inheritanceTest(){
 
   output += rover.info();
 
+  Rectangle rect = new Rectangle(10.0, 5.0);
+
+  Circle circ = new Circle(5.0);
+
+  output += "Rectangle Area: ${rect.area}, Circle Area: ${circ.area}";
+
+  Shape rect1 = new Rectangle(10.5, 25.0);
+
+  output += "Rect2 Area: ${(rect1 as Rectangle).area}";
+
+  Superhero superman = new Superhero();
+
+  superman.bulletproffDesc = "bullet doesn't penetrate";
+
+  superman.flyDesc = "flies faster than a speeding bullet";
+
+  output += "${superman.fly()}";
+  output += "${superman.hitByBullet()}";
+
+  Truck fordTruck = new Truck("Ford Truck");
+
+  output += "The ford truck id is: ${fordTruck.id}";
+
   querySelector("#iOutput").text = output;
 }
 
+// Abstract classes
+abstract class Shape{
+  double get area;
+}
+
+// Inheritance with abstract classes
+class Rectangle extends Shape{
+  double height, width;
+
+  Rectangle(this .height, this.width);
+
+  double get area => height * width;
+}
+
+class Circle extends Shape {
+  double radius;
+
+  Circle(this.radius);
+
+  double get area => pi * (radius * radius);
+}
+
+// Interfaces
+class Flyable {
+  String fly(){ return "flies"; }
+}
+
+class Bulletproof{
+  String hitByBullet(){ return "bullet bounces off"; }
+}
+
+class Superhero implements Flyable, Bulletproof {
+  String flyDesc = "can fly";
+  String bulletproffDesc = "bullet bounces off when hit by bullet";
+
+  String fly(){ return this.flyDesc; }
+
+  String hitByBullet(){ return this.bulletproffDesc; }
+}
+
+// Mixins
+class Idmaker {
+  int get id => new DateTime.now().millisecondsSinceEpoch;
+}
+
+class Vehicle {
+  int wheels = 4;
+}
+
+class Truck extends Vehicle with Idmaker{
+  String name = "no name";
+
+  Truck(String name){
+    this.name = name;
+  }
+}
